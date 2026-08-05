@@ -1,0 +1,484 @@
+{
+  "name": "Clínica Dental - Recordatorios Automáticos",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "schedule_trigger",
+      "name": "Ejecutar Cada Hora",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1brsEvmcD7MUb2bKMrNOixAXZH8VuxisDy_pfnqyN2VY",
+          "mode": "list",
+          "cachedResultName": "CONTROL CITAS DENTISTA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1brsEvmcD7MUb2bKMrNOixAXZH8VuxisDy_pfnqyN2VY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1483221216,
+          "mode": "list",
+          "cachedResultName": "Citas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1brsEvmcD7MUb2bKMrNOixAXZH8VuxisDy_pfnqyN2VY/edit#gid=1483221216"
+        },
+        "options": {}
+      },
+      "id": "read_sheets",
+      "name": "Leer Citas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        320,
+        304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "i8uAjlC8WiPjtIsA",
+          "name": "Google Sheets divisual@divisualproject.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const cita = $input.item.json;\n\nlet mensaje = '';\n\nif (cita.tipo_recordatorio === '24h') {\n  mensaje = `¡Hola ${cita.Paciente_Nombre}! 👋\n\nTe recordamos que mañana tienes cita en Clínica Dental [NOMBRE].\n\n📅 Fecha: ${cita.Fecha_Cita}\n🕐 Hora: ${cita.Hora_Cita}\n🦷 Tratamiento: ${cita.Tipo_Cita}\n\n📍 Dirección: [CONFIGURAR DIRECCIÓN]\n\nPor favor, llega 10 minutos antes de tu cita. Si necesitas cancelar o modificar, responde a este mensaje.\n\n¡Te esperamos!`;\n} else {\n  mensaje = `¡Hola ${cita.Paciente_Nombre}! 👋\n\nTu cita es en aproximadamente 1 hora.\n\n🕐 Hora: ${cita.Hora_Cita}\n🦷 Tratamiento: ${cita.Tipo_Cita}\n\n📍 Dirección: La casa del Ratoncito Pérez N7. Ratolandia\n\n¡Te esperamos pronto!`;\n}\n\nreturn {\n  json: {\n    ...cita,\n    mensaje: mensaje\n  }\n};"
+      },
+      "id": "generate_message",
+      "name": "Generar Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1brsEvmcD7MUb2bKMrNOixAXZH8VuxisDy_pfnqyN2VY",
+          "mode": "list",
+          "cachedResultName": "CONTROL CITAS DENTISTA"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1483221216,
+          "mode": "list",
+          "cachedResultName": "Citas"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Leer Citas').item.json.ID }}",
+            "Recordatorio_1h": "TRUE",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Event_ID_Google",
+              "displayName": "Event_ID_Google",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Paciente_Nombre",
+              "displayName": "Paciente_Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Paciente_Telefono",
+              "displayName": "Paciente_Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Cita",
+              "displayName": "Fecha_Cita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hora_Cita",
+              "displayName": "Hora_Cita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tipo_Cita",
+              "displayName": "Tipo_Cita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Notas",
+              "displayName": "Notas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Recordatorio_24h",
+              "displayName": "Recordatorio_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Recordatorio_1h",
+              "displayName": "Recordatorio_1h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha_creacion",
+              "displayName": "Fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "update_sheet",
+      "name": "Marcar Recordatorio Enviado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1584,
+        304
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "i8uAjlC8WiPjtIsA",
+          "name": "Google Sheets divisual@divisualproject.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "=la tribu",
+        "remoteJid": "={{ $json.Paciente_Telefono }}@s.whatsapp.net",
+        "messageText": "={{ $json.mensaje }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        304
+      ],
+      "id": "f36a6bbf-de5e-4101-a0d8-29c3a6535b1d",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ss8GqiKuymm2iOkc",
+          "name": "Evolution account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond_estado",
+              "leftValue": "={{ $json.Estado }}",
+              "rightValue": "Pendiente",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "cond_no_enviado",
+              "leftValue": "={{ $json.Recordatorio_1h }}",
+              "rightValue": "TRUE",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cond_min_1h",
+              "leftValue": "={{ $json.horas_restantes }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "cond_max_2h",
+              "leftValue": "={{ $json.horas_restantes }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter_pendientes",
+      "name": "Filtrar Pendientes 1-2h",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "horas_restantes",
+              "name": "horas_restantes",
+              "type": "number",
+              "value": "={{ (DateTime.fromFormat($json.Fecha_Cita + ' ' + $json.Hora_Cita, 'd/M/yyyy HH:mm').toMillis() - Date.now()) / 3600000 }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "calc_horas",
+      "name": "Calcular Horas Restantes",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        592,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# 🚀 ¿Quieres DOMINAR n8n?\n\n# Sesiones GRATIS todos los domingos\n\n### Aprende lo que nadie te cuenta:\n\n### - ✅ **Workflows avanzados** que generan resultados reales\n### - ✅ **Monetiza tus automatizaciones** y crea un negocio\n### - ✅ **Secretos de arquitectura** para flujos profesionales\n### - ✅ **Comunidad exclusiva** de automatizadores\n\n---\n\n## 💡 De principiante a experto en n8n\n\nNo solo aprenderás a crear workflows...\n**Aprenderás a VENDERLOS.**\n\n---\n\n## 👉🏼 [ÚNETE YA - Es GRATIS](https://divisualproject.academy/mentorias-domingos-plantillas/)\n\n*Plazas limitadas cada domingo*",
+        "height": 704,
+        "width": 672,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -16
+      ],
+      "id": "ca636a55-8244-43c2-a834-34825bd6281f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# 🎬 ¿Te está gustando este curso?\n\n## Sigue aprendiendo en mi canal de YouTube\n\nHe invertido **muchas horas** creando este contenido gratuito para ti.\n\nMi único objetivo: que aprendas y crezcas con n8n.\n\n---\n\n### 🙏 Solo te pido una cosa...\n\n### Este curso lo hice con **mucho tiempo y cariño**.\n\n### No te cuesta nada, pero para mí significa TODO:\n\n## [❤️ SUSCRÍBETE AHORA](https://www.youtube.com/@juanpe.divisual)\n\n---\n\n*Tu suscripción me ayuda a seguir creando contenido gratuito para ti y para toda la comunidad.*\n\n**¡Gracias por tu apoyo!** 🚀",
+        "height": 736,
+        "width": 768,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        -48
+      ],
+      "id": "cbef2203-9c40-42ae-8338-bdb796a9d2da",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ejecutar Cada Hora": {
+      "main": [
+        [
+          {
+            "node": "Leer Citas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        [
+          {
+            "node": "Marcar Recordatorio Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Pendientes 1-2h": {
+      "main": [
+        [
+          {
+            "node": "Generar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Citas": {
+      "main": [
+        [
+          {
+            "node": "Calcular Horas Restantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Horas Restantes": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Pendientes 1-2h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar Recordatorio Enviado": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Madrid",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "aeabdb2e-f095-4553-b396-d645cb5fcf81",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2723e5c0cdf73e609a9d6131a4145b2656ca7463c71fa761a441dc255964ffd8"
+  },
+  "id": "GOtIR6nR9vsqF8zF",
+  "tags": [
+    {
+      "updatedAt": "2026-01-24T18:52:51.970Z",
+      "createdAt": "2026-01-24T18:52:51.970Z",
+      "id": "0MDAWeekbxRbdAKV",
+      "name": "Curso Adrián Sáenz N8N 2"
+    }
+  ]
+}
