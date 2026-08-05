@@ -4,7 +4,13 @@
       "Bash(git add *)",
       "Bash(git commit -m 'add recursos y commits *)",
       "Bash(git commit -m 'update autocommit.md *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git filter-branch *)",
+      "Bash(git stash *)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch \"recursos/cursos/HYPERFRAMES Y CLAUDE CODE/divisual-video-editor-kit 2.zip\"' --prune-empty --tag-name-filter cat -- --all)",
+      "Bash(echo \"*.zip\")",
+      "Bash(git commit -m 'add .gitignore for large zip files *)",
+      "Bash(git commit -m 'add .gitignore para excluir archivos zip grandes *)"
     ]
   }
 }
