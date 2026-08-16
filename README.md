@@ -10,3 +10,6 @@ Repositorio que reúne kits, plantillas de automatización, workflows y document
 - **`recursos/workflows-n8n/`** — Workflows sueltos en JSON (WhatsApp, Instagram, LinkedIn, AutoShorts…).
 - **`recursos/documentos/`** — PDFs y documentos de apoyo (guiones de llamada en frío, master prompt, setup de OpenClaw…).
 - **`reglas-responsive/`** — Reglas y buenas prácticas de diseño responsive (accesibilidad, compatibilidad multi-dispositivo, rendimiento, theming).
+
+
+https://gooey.jakubantalik.com/
